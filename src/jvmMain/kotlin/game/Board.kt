@@ -1,44 +1,59 @@
 package game
 
-import FigureType
+import Figure
 
 class Board {
     companion object {
         const val SIZE = 3
     }
 
+    private val gameField = Array(SIZE) { Array(SIZE) { Figure.Empty } }
     val isGameOverAlready
-        get() = isBoardFull() || doBoardHasThreesInARow()
-    private val gameField = Array<Array<FigureType>>(SIZE) { Array(SIZE) { FigureType.Empty } }
+        get() = isBoardFull || doBoardHasThreesInARow()
 
-    fun getFigureInCell(row: Int, column: Int): FigureType {
+    private var freeCellsAmount = SIZE * SIZE
+    private val isBoardFull
+        get() = freeCellsAmount == 0
+
+    fun getFigureInCell(row: Int, column: Int): Figure {
         require(row in 0 until SIZE && column in 0 until SIZE) { "Выход за пределы поля!!!" }
         return gameField[row][column]
     }
 
-    fun makeMove(row: Int, column: Int, figure: FigureType): Boolean {
-        require(row in 0..SIZE && column in 0..SIZE) { "Выход за пределы поля!!!" }
-        if (gameField[row][column] != FigureType.Empty) {
+    fun makeMove(row: Int, column: Int, figure: Figure): Boolean {
+        require(row in 0 until SIZE && column in 0 until SIZE) { "Выход за пределы поля!!!" }
+        if (gameField[row][column] != Figure.Empty) {
             return false
         }
         gameField[row][column] = figure
+        freeCellsAmount--
         return true
     }
-
-    private fun isBoardFull(): Boolean {
-        for (raw in gameField) {
-            for (cell in raw) {
-                if (cell == FigureType.Empty) {
-                    return false
+    @Suppress("NestedBlockDepth")
+    fun makeMoveByEasyAI(figure: Figure) {
+        if (freeCellsAmount < 1) {
+            return
+        }
+        val cellNumber = (1..freeCellsAmount).random()
+        println("$cellNumber")
+        var counter = 0
+        for (row in gameField.indices) {
+            for (column in gameField[row].indices) {
+                if (gameField[row][column] == Figure.Empty) {
+                    counter++
+                    if (counter == cellNumber) {
+                        gameField[row][column] = figure
+                        freeCellsAmount--
+                        return
+                    }
                 }
             }
         }
-        return true
     }
 
     private fun hasThreeInRows(): Boolean {
         for (row in gameField) {
-            if (row[0] == row[1] && row[1] == row[2] && row[0] != FigureType.Empty) {
+            if (row[0] == row[1] && row[1] == row[2] && row[0] != Figure.Empty) {
                 return true
             }
         }
@@ -49,7 +64,7 @@ class Board {
         for (column in 0 until SIZE) {
             if (gameField[0][column] == gameField[1][column] &&
                 gameField[0][column] == gameField[2][column] &&
-                gameField[0][column] != FigureType.Empty
+                gameField[0][column] != Figure.Empty
             ) {
                 return true
             }
@@ -61,12 +76,12 @@ class Board {
         return (
             gameField[0][0] == gameField[1][1] &&
                 gameField[0][0] == gameField[2][2] &&
-                gameField[0][0] != FigureType.Empty
+                gameField[0][0] != Figure.Empty
             ) ||
             (
                 gameField[0][2] == gameField[1][1] &&
                     gameField[0][2] == gameField[2][0] &&
-                    gameField[0][2] != FigureType.Empty
+                    gameField[0][2] != Figure.Empty
                 )
     }
 
