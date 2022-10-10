@@ -2,7 +2,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import game.Board
+import java.util.*
+import kotlin.concurrent.schedule
 
+const val DELAY_TIME = 400L
 @Suppress("TooManyFunctions")
 class ViewModel {
     var state: State by mutableStateOf(initialState())
@@ -13,9 +16,11 @@ class ViewModel {
         var board: Board = Board(),
         var whoGoFigure: Figure = Figure.Cross,
         val game: Game = Game.PersonVSPerson,
-        val player1: Player = Player.Player,
-        val player2: Player = Player.Player
+        val player1: Player = Player.Human,
+        val player2: Player = Player.Human,
+        var mayPlayerGo: Boolean = false
     )
+
     private fun initialState(): State = State()
     private inline fun updateState(update: State.() -> State) {
         state = state.update()
@@ -43,22 +48,57 @@ class ViewModel {
     }
 
     fun onClickDoInCell(row: Int, column: Int) {
+        if (!state.mayPlayerGo) {
+            return
+        }
         makeMovePvP(row, column)
-        if (state.game == Game.PersonVSEasyAI) {
-            makeMovePvEasyAI()
+
+        if (state.player1 == Player.EasyAI || state.player2 == Player.EasyAI) {
+            state.mayPlayerGo = false
+            Timer("SettingUp", false).schedule(DELAY_TIME) {
+                makeMovePvEasyAI()
+                state.mayPlayerGo = true
+            }
         }
     }
 
     fun onClickDoInGameOverScreen() = updateState {
         initialState()
     }
+
     fun onClickDoInPlayer1Button() = updateState {
-        copy()
+        copy(
+            player1 = when (player1) {
+                Player.Human -> Player.EasyAI
+                Player.EasyAI -> Player.HardAI
+                Player.HardAI -> Player.Human
+            }
+        )
     }
+
     fun onClickDoInPlayer2Button() = updateState {
-        copy()
+        copy(
+            player2 = when (player2) {
+                Player.Human -> Player.EasyAI
+                Player.EasyAI -> Player.HardAI
+                Player.HardAI -> Player.Human
+            }
+        )
     }
+
     fun onClickDoInPlayerSwitchButton() = updateState {
-        copy()
+        copy(player1 = player2, player2 = player1)
+    }
+
+    fun onClickStartGame() {
+        updateState { copy(screen = Screen.GameScreen) }
+        if (state.player1 == Player.EasyAI) {
+            Timer("SettingUp", false).schedule(DELAY_TIME) {
+                makeMovePvEasyAI()
+                state.mayPlayerGo = true
+            }
+        } else {
+            state.mayPlayerGo = true
+        }
     }
 }

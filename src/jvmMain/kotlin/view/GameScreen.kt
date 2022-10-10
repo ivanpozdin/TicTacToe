@@ -1,12 +1,14 @@
 package view
 
 import ViewModel
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
+@OptIn(ExperimentalAnimationApi::class)
 @Suppress("FunctionNaming")
 @Composable
 fun GameScreen(viewModel: ViewModel) {

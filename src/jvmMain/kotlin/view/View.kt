@@ -11,7 +11,8 @@ fun View(viewModel: ViewModel) {
     val state = viewModel.state
     MaterialTheme {
         when (state.screen) {
-            Screen.MenuScreen -> MenuScreen(viewModel)
+//            Screen.MenuScreen -> MenuScreen(viewModel)
+            Screen.MenuScreen -> CoolMenu(viewModel)
             Screen.GameScreen -> GameScreen((viewModel))
             Screen.GameOverScreen -> GameOverScreen(viewModel)
         }

@@ -13,8 +13,10 @@ enum class Figure(val path: String) {
     }
 }
 
-enum class Player {
-    Player, EasyAI, HardAI
+enum class Player(val description: String) {
+    Human("Player"),
+    EasyAI("Stupid AI"),
+    HardAI("Smart AI")
 }
 
 enum class Game {
