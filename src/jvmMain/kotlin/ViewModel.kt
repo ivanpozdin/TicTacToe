@@ -6,7 +6,6 @@ import java.util.*
 import kotlin.concurrent.schedule
 
 const val DELAY_TIME = 400L
-@Suppress("TooManyFunctions")
 class ViewModel {
     var state: State by mutableStateOf(initialState())
         private set
@@ -15,10 +14,10 @@ class ViewModel {
         val screen: Screen = Screen.MenuScreen,
         var board: Board = Board(),
         var whoGoFigure: Figure = Figure.Cross,
-        val game: Game = Game.PersonVSPerson,
         val player1: Player = Player.Human,
         val player2: Player = Player.Human,
-        var mayPlayerGo: Boolean = false
+        var mayPlayerGo: Boolean = false,
+        var gameResult: GameResult = GameResult.Tie
     )
 
     private fun initialState(): State = State()
@@ -26,13 +25,13 @@ class ViewModel {
         state = state.update()
     }
 
-    fun onClickDoMenuPvP() = updateState { copy(screen = Screen.GameScreen, game = Game.PersonVSPerson) }
-    fun onClickDoMenuPvAI() = updateState { copy(screen = Screen.GameScreen, game = Game.PersonVSEasyAI) }
+    fun onClickDoMenuPvP() = updateState { copy(screen = Screen.GameScreen) }
+    fun onClickDoMenuPvAI() = updateState { copy(screen = Screen.GameScreen) }
 
     private fun makeMovePvP(row: Int, column: Int) = updateState {
         board.makeMove(row, column, state.whoGoFigure)
         if (board.isGameOverAlready) {
-            copy(screen = Screen.GameOverScreen)
+            copy(screen = Screen.GameOverScreen, gameResult = board.gameResult)
         } else {
             copy(board = board, whoGoFigure = whoGoFigure.getNext())
         }
@@ -41,7 +40,16 @@ class ViewModel {
     private fun makeMovePvEasyAI() = updateState {
         board.makeMoveByEasyAI(state.whoGoFigure)
         if (board.isGameOverAlready) {
-            copy(screen = Screen.GameOverScreen)
+            copy(screen = Screen.GameOverScreen,gameResult = board.gameResult)
+        } else {
+            copy(board = board, whoGoFigure = whoGoFigure.getNext())
+        }
+    }
+
+    private fun makeMovePvHardAI() = updateState {
+        board.makeMoveByHardAI(state.whoGoFigure)
+        if (board.isGameOverAlready) {
+            copy(screen = Screen.GameOverScreen, gameResult = board.gameResult)
         } else {
             copy(board = board, whoGoFigure = whoGoFigure.getNext())
         }
@@ -57,6 +65,12 @@ class ViewModel {
             state.mayPlayerGo = false
             Timer("SettingUp", false).schedule(DELAY_TIME) {
                 makeMovePvEasyAI()
+                state.mayPlayerGo = true
+            }
+        } else if (state.player1 == Player.HardAI || state.player2 == Player.HardAI) {
+            state.mayPlayerGo = false
+            Timer("SettingUp", false).schedule(DELAY_TIME) {
+                makeMovePvHardAI()
                 state.mayPlayerGo = true
             }
         }
@@ -91,14 +105,26 @@ class ViewModel {
     }
 
     fun onClickStartGame() {
+        if (state.player1 in listOf(Player.EasyAI, Player.HardAI) && state.player2 in listOf(Player.EasyAI, Player.HardAI)) {
+            return
+        }
         updateState { copy(screen = Screen.GameScreen) }
-        if (state.player1 == Player.EasyAI) {
-            Timer("SettingUp", false).schedule(DELAY_TIME) {
-                makeMovePvEasyAI()
+        when (state.player1) {
+            Player.EasyAI -> {
+                Timer("SettingUp", false).schedule(DELAY_TIME) {
+                    makeMovePvEasyAI()
+                    state.mayPlayerGo = true
+                }
+            }
+            Player.HardAI -> {
+                Timer("SettingUp", false).schedule(DELAY_TIME) {
+                    makeMovePvHardAI()
+                    state.mayPlayerGo = true
+                }
+            }
+            else -> {
                 state.mayPlayerGo = true
             }
-        } else {
-            state.mayPlayerGo = true
         }
     }
 }

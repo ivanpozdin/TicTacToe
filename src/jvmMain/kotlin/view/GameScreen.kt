@@ -9,7 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @OptIn(ExperimentalAnimationApi::class)
-@Suppress("FunctionNaming")
 @Composable
 fun GameScreen(viewModel: ViewModel) {
     Column(Modifier.fillMaxWidth()) {

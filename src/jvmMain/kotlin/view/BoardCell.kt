@@ -21,7 +21,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 
 @ExperimentalAnimationApi
-@Suppress("FunctionNaming")
 @Composable
 fun BoardCell(viewModel: ViewModel, row: Int, column: Int, modifier: Modifier) = Box(modifier) {
     Button(

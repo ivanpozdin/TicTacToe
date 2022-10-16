@@ -4,6 +4,7 @@ enum class Screen {
 
 enum class Figure(val path: String) {
     Cross("cross.png"), Noght("noght.png"), Empty("empty.png");
+
     fun getNext(): Figure {
         return when (this) {
             Cross -> Noght
@@ -13,12 +14,12 @@ enum class Figure(val path: String) {
     }
 }
 
-enum class Player(val description: String) {
-    Human("Player"),
-    EasyAI("Stupid AI"),
-    HardAI("Smart AI")
+enum class Player {
+    Human,
+    EasyAI,
+    HardAI
 }
 
-enum class Game {
-    PersonVSPerson, PersonVSEasyAI, PersonVSHardAI
+enum class GameResult {
+    Tie, CrossWon, NoghtWon, NotFinishedYet
 }
