@@ -20,7 +20,7 @@ fun MenuScreen(viewModel: ViewModel) {
             Button(onClick = { viewModel.onClickDoInPlayer2Button() }) { Text(viewModel.state.player2.name)}
         }
         Button(onClick = { viewModel.onClickStartGame() }) { Text("Start game") }
-        Text(text = "P.S. You can't choose two ai to play with each other")}
+        Text(text = "P.S. You can't choose two AI options at the same time.")}
 
 
 }
