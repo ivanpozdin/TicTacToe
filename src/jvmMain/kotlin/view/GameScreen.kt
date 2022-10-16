@@ -2,6 +2,7 @@ package view
 
 import ViewModel
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,7 +14,7 @@ import androidx.compose.ui.Modifier
  */
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun GameScreen(viewModel: ViewModel) {
+fun GameScreen(viewModel: ViewModel, modifier: Modifier = Modifier) = Box(modifier){
     Column(Modifier.fillMaxWidth()) {
         Row(modifier = Modifier.weight(1f).fillMaxWidth()) {
             BoardCell(viewModel, 0, 0, Modifier.weight(1f))
