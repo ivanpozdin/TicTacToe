@@ -6,10 +6,18 @@ import java.util.*
 import kotlin.concurrent.schedule
 
 const val DELAY_TIME = 400L
+
+/**
+ * Класс отвечающий за связь между ui и бизнес логикой программы (Board)
+ */
 class ViewModel {
     var state: State by mutableStateOf(initialState())
         private set
 
+    /**
+     * Дата класс, отвечающий за состояние приложения. Если какая-то функция изменила state,
+     * то вследствии этого может изменится view, т.е. ui.
+     */
     data class State(
         val screen: Screen = Screen.MenuScreen,
         var board: Board = Board(),
@@ -24,9 +32,6 @@ class ViewModel {
     private inline fun updateState(update: State.() -> State) {
         state = state.update()
     }
-
-    fun onClickDoMenuPvP() = updateState { copy(screen = Screen.GameScreen) }
-    fun onClickDoMenuPvAI() = updateState { copy(screen = Screen.GameScreen) }
 
     private fun makeMovePvP(row: Int, column: Int) = updateState {
         board.makeMove(row, column, state.whoGoFigure)
@@ -55,6 +60,10 @@ class ViewModel {
         }
     }
 
+    /**
+     * Если нажали на клетку игрового поля, запускается эта функция.
+     * Она меняет пустую клетку на крестик или нолик, и если включен режим с ботом запускает ход бота.
+     */
     fun onClickDoInCell(row: Int, column: Int) {
         if (!state.mayPlayerGo) {
             return
@@ -76,10 +85,15 @@ class ViewModel {
         }
     }
 
+    /**
+     * Очищает данные прошлой игры.
+     */
     fun onClickDoInGameOverScreen() = updateState {
         initialState()
     }
-
+    /**
+     * Функция меняет режим того, кто первым сделает ход.
+     */
     fun onClickDoInPlayer1Button() = updateState {
         copy(
             player1 = when (player1) {
@@ -90,6 +104,9 @@ class ViewModel {
         )
     }
 
+    /**
+     * Функция меняет режим того, кто вторрым сделает ход.
+     */
     fun onClickDoInPlayer2Button() = updateState {
         copy(
             player2 = when (player2) {
@@ -100,10 +117,17 @@ class ViewModel {
         )
     }
 
+    /**
+     * Функция меняет местами режимы игры.
+     */
     fun onClickDoInPlayerSwitchButton() = updateState {
         copy(player1 = player2, player2 = player1)
     }
 
+    /**
+     * Функция начинает игру, если пользователь нажал на кнопу start game.
+     * Причём не начинает, если выбраны сразу 2 режима с ai.
+     */
     fun onClickStartGame() {
         if (state.player1 in listOf(Player.EasyAI, Player.HardAI) && state.player2 in listOf(Player.EasyAI, Player.HardAI)) {
             return

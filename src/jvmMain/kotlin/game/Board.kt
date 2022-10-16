@@ -3,28 +3,31 @@ package game
 import Figure
 import GameResult
 
+/**
+ * Класс отвечает за игровую логику.
+ * В нём хранится игровое поле, методы для совершения ходов, методы для проверки состояния игрового поля.
+ */
 class Board {
     companion object {
         const val SIZE = 3
     }
 
+    /**
+     * Дата класс описывает ход, в том числе оценка, она нужна в для режима hardAI
+     */
     data class Turn(val row: Int, val column: Int, var score: Int = 0)
 
     private val board = Array(SIZE) { Array(SIZE) { Figure.Empty } }
     val isGameOverAlready
-        get() = isBoardFull || didCrossWin || didNoghtWin
+        get() = isBoardFull || didWon(board, Figure.Cross) || didWon(board, Figure.Noght)
 
     val gameResult
         get() = when{
-            didCrossWin -> GameResult.CrossWon
-            didNoghtWin -> GameResult.NoghtWon
+            didWon(board, Figure.Cross) -> GameResult.CrossWon
+            didWon(board, Figure.Noght) -> GameResult.NoghtWon
             isBoardFull -> GameResult.Tie
             else -> GameResult.NotFinishedYet
         }
-    private val didCrossWin
-        get() = didWon(board, Figure.Cross)
-    private val didNoghtWin
-        get() = didWon(board, Figure.Noght)
 
     private var freeCellsAmount = SIZE * SIZE
 
@@ -36,6 +39,9 @@ class Board {
         return board[row][column]
     }
 
+    /**
+     * Простая функция, чтобы сделать ход по данным строке и столбцу.
+     */
     fun makeMove(row: Int, column: Int, figure: Figure): Boolean {
         require(row in 0 until SIZE && column in 0 until SIZE) { "Выход за пределы поля!!!" }
         if (board[row][column] != Figure.Empty) {
@@ -46,6 +52,9 @@ class Board {
         return true
     }
 
+    /**
+     * Функция отвечает за режим easyAI, то есть делает просто случайные ходы.
+     */
     fun makeMoveByEasyAI(figure: Figure) {
         if (freeCellsAmount < 1) {
             return
@@ -66,6 +75,9 @@ class Board {
         }
     }
 
+    /**
+     * Функция отвечает за режим hardAI, она делает продуманные ходы, не может проиграть.
+     */
     fun makeMoveByHardAI(figure: Figure) {
         val turn = getBestTurn(board, figure, figure, figure.getNext())
         makeMove(turn.row, turn.column, figure)

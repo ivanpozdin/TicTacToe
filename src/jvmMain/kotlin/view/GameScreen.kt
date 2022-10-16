@@ -8,6 +8,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
+/**
+ * Функция отображает экран непосредственно игры.
+ */
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun GameScreen(viewModel: ViewModel) {
