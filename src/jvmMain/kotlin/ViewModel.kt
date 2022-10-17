@@ -29,6 +29,7 @@ class ViewModel {
     )
 
     private fun initialState(): State = State()
+    
     private inline fun updateState(update: State.() -> State) {
         state = state.update()
     }
