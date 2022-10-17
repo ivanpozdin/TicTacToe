@@ -8,7 +8,7 @@ import kotlin.concurrent.schedule
 const val DELAY_TIME = 400L
 
 /**
- * Класс отвечающий за связь между ui и бизнес логикой программы (Board)
+ * Класс, отвечающий за связь между ui и бизнес логикой программы (Board)
  */
 class ViewModel {
     var state: State by mutableStateOf(initialState())
