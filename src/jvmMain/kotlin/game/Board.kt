@@ -158,6 +158,7 @@ class Board {
                                 newBoard[0][2] == figure
                         )
     }
+    
     private fun doHaveThreeInInColumns(newBoard: Array<Array<Figure>>, figure: Figure): Boolean {
         for (column in 0 until SIZE) {
             if (newBoard[0][column] == newBoard[1][column] &&
