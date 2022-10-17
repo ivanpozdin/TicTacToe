@@ -1,4 +1,4 @@
-package game
+package com.spbu.homework6.game
 
 import Figure
 

@@ -1,7 +1,6 @@
-package view
+package com.spbu.homework6.view
 
 import Figure
-import ViewModel
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.expandHorizontally
@@ -19,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import com.spbu.homework6.ViewModel
 
 @ExperimentalAnimationApi
 @Composable

@@ -1,8 +1,14 @@
+package com.spbu.homework6
+
+import Figure
+import GameResult
+import Player
+import Screen
 import androidx.compose.runtime.*
-import game.AI
-import game.Board
-import game.EasyAI
-import game.HardAI
+import com.spbu.homework6.game.AI
+import com.spbu.homework6.game.Board
+import com.spbu.homework6.game.EasyAI
+import com.spbu.homework6.game.HardAI
 import java.util.*
 import kotlin.concurrent.schedule
 
@@ -17,16 +23,16 @@ class ViewModel {
 
     /**
      * Дата-класс, отвечающий за состояние приложения. Если какая-то функция изменила state,
-     * то вследствии этого может изменится view, т.е. ui.
+     * то вследствии этого может изменится com.spbu.homework6.view, т.е. ui.
      */
     data class State(
         val screen: Screen = Screen.MenuScreen,
         var board: Board = Board(),
         var whoGoFigure: Figure = Figure.Cross,
-        val player1AI: AI? = null,
-        val player2AI: AI? = null,
-        val player1Name: Player = Player.Human,
-        val player2Name: Player = Player.Human,
+        var player1AI: AI? = null,
+        var player2AI: AI? = null,
+        var player1Name: Player = Player.Human,
+        var player2Name: Player = Player.Human,
         var mayPlayerGo: Boolean = false,
         var gameResult: GameResult = GameResult.Tie,
         var ai: AI = EasyAI(board)
@@ -87,18 +93,16 @@ class ViewModel {
      */
     fun onClickDoInPlayer1Button() = updateState {
         copy(
-            player1AI = when (player1AI) {
-                EasyAI(board) -> HardAI(board)
-                HardAI(board) -> null
-                else -> EasyAI(board)
+            player1AI = when (player1Name) {
+                Player.Human -> EasyAI(board)
+                Player.EasyAI -> HardAI(board)
+                else -> null
             },
             player1Name = when (player1Name) {
                 Player.Human -> Player.EasyAI
                 Player.EasyAI -> Player.HardAI
                 Player.HardAI -> Player.Human
             }
-
-
         )
     }
 
@@ -107,10 +111,10 @@ class ViewModel {
      */
     fun onClickDoInPlayer2Button() = updateState {
         copy(
-            player2AI = when (player2AI) {
-                EasyAI(board) -> HardAI(board)
-                HardAI(board) -> null
-                else -> EasyAI(board)
+            player2AI = when (player2Name) {
+                Player.Human -> EasyAI(board)
+                Player.EasyAI -> HardAI(board)
+                else -> null
             },
             player2Name = when (player2Name) {
                 Player.Human -> Player.EasyAI

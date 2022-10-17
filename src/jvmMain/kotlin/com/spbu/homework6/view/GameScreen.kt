@@ -1,6 +1,5 @@
-package view
+package com.spbu.homework6.view
 
-import ViewModel
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -8,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.spbu.homework6.ViewModel
 
 /**
  * Функция отображает экран непосредственно игры.
