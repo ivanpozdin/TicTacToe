@@ -21,6 +21,4 @@ fun MenuScreen(viewModel: ViewModel) {
         }
         Button(onClick = { viewModel.onClickStartGame() }) { Text("Start game") }
         Text(text = "P.S. You can't choose two AI options at the same time.")}
-
-
 }
