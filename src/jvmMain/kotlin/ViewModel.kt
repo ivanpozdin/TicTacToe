@@ -92,6 +92,7 @@ class ViewModel {
     fun onClickDoInGameOverScreen() = updateState {
         initialState()
     }
+    
     /**
      * Функция меняет режим того, кто первым сделает ход.
      */
