@@ -18,6 +18,7 @@ class Board {
     data class Turn(val row: Int, val column: Int, var score: Int = 0)
 
     private val board = Array(SIZE) { Array(SIZE) { Figure.Empty } }
+    
     val isGameOverAlready
         get() = isBoardFull || didWon(board, Figure.Cross) || didWon(board, Figure.Noght)
 
