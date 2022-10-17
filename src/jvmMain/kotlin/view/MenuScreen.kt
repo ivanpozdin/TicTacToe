@@ -15,10 +15,11 @@ fun MenuScreen(viewModel: ViewModel) {
     Column {
         Text(text = "Choose game options.")
         Row {
-            Button(onClick = { viewModel.onClickDoInPlayer1Button() }) { Text(viewModel.state.player1.name) }
+            Button(onClick = { viewModel.onClickDoInPlayer1Button() }) { Text(viewModel.state.player1Name.name) }
             Button(onClick = { viewModel.onClickDoInPlayerSwitchButton() }) { Text("↔️") }
-            Button(onClick = { viewModel.onClickDoInPlayer2Button() }) { Text(viewModel.state.player2.name)}
+            Button(onClick = { viewModel.onClickDoInPlayer2Button() }) { Text(viewModel.state.player2Name.name) }
         }
         Button(onClick = { viewModel.onClickStartGame() }) { Text("Start game") }
-        Text(text = "P.S. You can't choose two AI options at the same time.")}
+        Text(text = "P.S. You can't choose two AI options at the same time.")
+    }
 }

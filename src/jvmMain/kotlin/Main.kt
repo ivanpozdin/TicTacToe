@@ -7,8 +7,8 @@ import view.View
 
 fun main() = application {
     Window(
-        onCloseRequest = ::exitApplication, title = "TicTacToe",
-        state = rememberWindowState(width = 500.dp, height = 500.dp)
+        onCloseRequest = ::exitApplication, title = "TicTacToe", resizable = false,
+        state = rememberWindowState(width = 600.dp, height = 600.dp)
     ) {
         val viewModel = remember { ViewModel() }
         View(viewModel)

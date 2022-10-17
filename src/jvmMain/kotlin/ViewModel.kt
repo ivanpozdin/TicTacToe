@@ -1,7 +1,8 @@
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
+import game.AI
 import game.Board
+import game.EasyAI
+import game.HardAI
 import java.util.*
 import kotlin.concurrent.schedule
 
@@ -22,19 +23,22 @@ class ViewModel {
         val screen: Screen = Screen.MenuScreen,
         var board: Board = Board(),
         var whoGoFigure: Figure = Figure.Cross,
-        val player1: Player = Player.Human,
-        val player2: Player = Player.Human,
+        val player1AI: AI? = null,
+        val player2AI: AI? = null,
+        val player1Name: Player = Player.Human,
+        val player2Name: Player = Player.Human,
         var mayPlayerGo: Boolean = false,
-        var gameResult: GameResult = GameResult.Tie
+        var gameResult: GameResult = GameResult.Tie,
+        var ai: AI = EasyAI(board)
     )
 
     private fun initialState(): State = State()
-    
+
     private inline fun updateState(update: State.() -> State) {
         state = state.update()
     }
 
-    private fun makeMovePvP(row: Int, column: Int) = updateState {
+    private fun makeMoveByHuman(row: Int, column: Int) = updateState {
         board.makeMove(row, column, state.whoGoFigure)
         if (board.isGameOverAlready) {
             copy(screen = Screen.GameOverScreen, gameResult = board.gameResult)
@@ -43,17 +47,8 @@ class ViewModel {
         }
     }
 
-    private fun makeMovePvEasyAI() = updateState {
-        board.makeMoveByEasyAI(state.whoGoFigure)
-        if (board.isGameOverAlready) {
-            copy(screen = Screen.GameOverScreen,gameResult = board.gameResult)
-        } else {
-            copy(board = board, whoGoFigure = whoGoFigure.getNext())
-        }
-    }
-
-    private fun makeMovePvHardAI() = updateState {
-        board.makeMoveByHardAI(state.whoGoFigure)
+    private fun makeMoveByAI() = updateState {
+        ai.makeTurnByAI(state.whoGoFigure)
         if (board.isGameOverAlready) {
             copy(screen = Screen.GameOverScreen, gameResult = board.gameResult)
         } else {
@@ -69,18 +64,12 @@ class ViewModel {
         if (!state.mayPlayerGo) {
             return
         }
-        makeMovePvP(row, column)
+        makeMoveByHuman(row, column)
 
-        if (state.player1 == Player.EasyAI || state.player2 == Player.EasyAI) {
+        if (state.player1AI != null || state.player2AI != null) {
             state.mayPlayerGo = false
             Timer("SettingUp", false).schedule(DELAY_TIME) {
-                makeMovePvEasyAI()
-                state.mayPlayerGo = true
-            }
-        } else if (state.player1 == Player.HardAI || state.player2 == Player.HardAI) {
-            state.mayPlayerGo = false
-            Timer("SettingUp", false).schedule(DELAY_TIME) {
-                makeMovePvHardAI()
+                makeMoveByAI()
                 state.mayPlayerGo = true
             }
         }
@@ -92,17 +81,24 @@ class ViewModel {
     fun onClickDoInGameOverScreen() = updateState {
         initialState()
     }
-    
+
     /**
      * Функция меняет режим того, кто первым сделает ход.
      */
     fun onClickDoInPlayer1Button() = updateState {
         copy(
-            player1 = when (player1) {
+            player1AI = when (player1AI) {
+                EasyAI(board) -> HardAI(board)
+                HardAI(board) -> null
+                else -> EasyAI(board)
+            },
+            player1Name = when (player1Name) {
                 Player.Human -> Player.EasyAI
                 Player.EasyAI -> Player.HardAI
                 Player.HardAI -> Player.Human
             }
+
+
         )
     }
 
@@ -111,7 +107,12 @@ class ViewModel {
      */
     fun onClickDoInPlayer2Button() = updateState {
         copy(
-            player2 = when (player2) {
+            player2AI = when (player2AI) {
+                EasyAI(board) -> HardAI(board)
+                HardAI(board) -> null
+                else -> EasyAI(board)
+            },
+            player2Name = when (player2Name) {
                 Player.Human -> Player.EasyAI
                 Player.EasyAI -> Player.HardAI
                 Player.HardAI -> Player.Human
@@ -123,34 +124,25 @@ class ViewModel {
      * Функция меняет местами режимы игры.
      */
     fun onClickDoInPlayerSwitchButton() = updateState {
-        copy(player1 = player2, player2 = player1)
+        copy(player1AI = player2AI, player2AI = player1AI, player1Name = player2Name, player2Name = player1Name)
     }
 
     /**
      * Функция начинает игру, если пользователь нажал на кнопу start game.
-     * Причём не начинает, если выбраны сразу 2 режима с ai.
+     * Причём не начинает, если выбраны сразу 2 режима с AI.
      */
     fun onClickStartGame() {
-        if (state.player1 in listOf(Player.EasyAI, Player.HardAI) && state.player2 in listOf(Player.EasyAI, Player.HardAI)) {
+        if (state.player1AI != null && state.player2AI != null) {
             return
         }
         updateState { copy(screen = Screen.GameScreen) }
-        when (state.player1) {
-            Player.EasyAI -> {
-                Timer("SettingUp", false).schedule(DELAY_TIME) {
-                    makeMovePvEasyAI()
-                    state.mayPlayerGo = true
-                }
-            }
-            Player.HardAI -> {
-                Timer("SettingUp", false).schedule(DELAY_TIME) {
-                    makeMovePvHardAI()
-                    state.mayPlayerGo = true
-                }
-            }
-            else -> {
+        if (state.player1AI != null) {
+            Timer("SettingUp", false).schedule(DELAY_TIME) {
+                makeMoveByAI()
                 state.mayPlayerGo = true
             }
+        } else {
+            state.mayPlayerGo = true
         }
     }
 }
