@@ -143,7 +143,6 @@ class Board {
             }
         }
         return false
-
     }
 
     private fun doHaveThreeInDiagonals(newBoard: Array<Array<Figure>>, figure: Figure): Boolean {
