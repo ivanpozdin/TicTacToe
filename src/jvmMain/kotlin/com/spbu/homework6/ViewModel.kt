@@ -34,8 +34,7 @@ class ViewModel {
         var player1Name: Player = Player.Human,
         var player2Name: Player = Player.Human,
         var mayPlayerGo: Boolean = false,
-        var gameResult: GameResult = GameResult.Tie,
-        var ai: AI = EasyAI(board)
+        var gameResult: GameResult = GameResult.Tie
     )
 
     private fun initialState(): State = State()
@@ -54,7 +53,9 @@ class ViewModel {
     }
 
     private fun makeMoveByAI() = updateState {
-        ai.makeTurnByAI(state.whoGoFigure)
+        require(player1AI == null || player2AI == null) { "В игре может участвовать не больше одного AI" }
+        player1AI?.makeTurnByAI(state.whoGoFigure)
+        player2AI?.makeTurnByAI(state.whoGoFigure)
         if (board.isGameOverAlready) {
             copy(screen = Screen.GameOverScreen, gameResult = board.gameResult)
         } else {

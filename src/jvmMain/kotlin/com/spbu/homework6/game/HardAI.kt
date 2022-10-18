@@ -10,6 +10,7 @@ class HardAI(private val gameBoard: Board) : AI {
      * Функция совершает продуманный ход.
      */
     override fun makeTurnByAI(figure: Figure) {
+        println("Hello from hard AI")
         val turn = getBestTurn(gameBoard.board, figure, figure, figure.getNext())
         gameBoard.makeMove(turn.row, turn.column, figure)
     }
