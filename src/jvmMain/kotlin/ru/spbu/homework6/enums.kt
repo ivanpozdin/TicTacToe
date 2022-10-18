@@ -1,3 +1,4 @@
+package ru.spbu.homework6
 enum class Screen {
     MenuScreen, GameScreen, GameOverScreen
 }

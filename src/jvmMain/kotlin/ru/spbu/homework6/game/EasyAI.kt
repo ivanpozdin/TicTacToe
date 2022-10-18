@@ -1,6 +1,7 @@
-package com.spbu.homework6.game
+package ru.spbu.homework6.game
 
-import Figure
+import ru.spbu.homework6.Figure
+
 
 /**
  * Класс отвечает за режим easyAI, в котором AI делает случайные ходы.

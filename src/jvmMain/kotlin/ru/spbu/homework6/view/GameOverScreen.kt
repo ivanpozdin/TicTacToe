@@ -1,4 +1,4 @@
-package com.spbu.homework6.view
+package ru.spbu.homework6.view
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
@@ -6,7 +6,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.spbu.homework6.ViewModel
+import ru.spbu.homework6.GameResult
+import ru.spbu.homework6.ViewModel
 
 /**
  * Функция выводит на экран информацию об окончании игры, т.е. кто выиграл.

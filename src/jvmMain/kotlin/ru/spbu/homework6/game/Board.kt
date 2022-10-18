@@ -1,7 +1,7 @@
-package com.spbu.homework6.game
+package ru.spbu.homework6.game
 
-import Figure
-import GameResult
+import ru.spbu.homework6.Figure
+import ru.spbu.homework6.GameResult
 
 /**
  * Класс отвечает за игровую логику.

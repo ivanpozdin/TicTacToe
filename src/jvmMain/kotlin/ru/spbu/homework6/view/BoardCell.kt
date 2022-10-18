@@ -1,6 +1,5 @@
-package com.spbu.homework6.view
+package ru.spbu.homework6.view
 
-import Figure
 import androidx.compose.animation.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -14,7 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import com.spbu.homework6.ViewModel
+import ru.spbu.homework6.Figure
+import ru.spbu.homework6.ViewModel
 
 @ExperimentalAnimationApi
 @Composable

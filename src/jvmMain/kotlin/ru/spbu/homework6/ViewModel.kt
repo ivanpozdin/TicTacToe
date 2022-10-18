@@ -1,14 +1,10 @@
-package com.spbu.homework6
+package ru.spbu.homework6
 
-import Figure
-import GameResult
-import Player
-import Screen
 import androidx.compose.runtime.*
-import com.spbu.homework6.game.AI
-import com.spbu.homework6.game.Board
-import com.spbu.homework6.game.EasyAI
-import com.spbu.homework6.game.HardAI
+import ru.spbu.homework6.game.AI
+import ru.spbu.homework6.game.Board
+import ru.spbu.homework6.game.EasyAI
+import ru.spbu.homework6.game.HardAI
 import java.util.*
 import kotlin.concurrent.schedule
 
@@ -23,7 +19,7 @@ class ViewModel {
 
     /**
      * Дата-класс, отвечающий за состояние приложения. Если какая-то функция изменила state,
-     * то вследствии этого может изменится com.spbu.homework6.view, т.е. ui.
+     * то вследствии этого может изменится view, т.е. ui.
      */
     data class State(
         val screen: Screen = Screen.MenuScreen,
